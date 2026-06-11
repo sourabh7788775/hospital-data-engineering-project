@@ -1,0 +1,903 @@
+{
+  "datasets": [
+    {
+      "name": "age_group_analysis",
+      "displayName": "Age Group Analysis",
+      "queryLines": [
+        "SELECT\n",
+        "  age_group,\n",
+        "  gender,\n",
+        "  patient_count\n",
+        "FROM\n",
+        "  dbutils_catalog.gold_hospital.age_group_analysis\n",
+        "ORDER BY\n",
+        "  age_group,\n",
+        "  gender"
+      ]
+    },
+    {
+      "name": "payment_distribution",
+      "displayName": "Payment Distribution",
+      "queryLines": [
+        "SELECT\n",
+        "  payment_method,\n",
+        "  total_transactions\n",
+        "FROM\n",
+        "  dbutils_catalog.gold_hospital.payment_analysis"
+      ]
+    },
+    {
+      "name": "kpi_metrics",
+      "displayName": "KPI Metrics",
+      "queryLines": [
+        "SELECT\n",
+        "  COUNT(*) as total_patients,\n",
+        "  ROUND(AVG(age), 1) as average_age,\n",
+        "  SUM(bill_amount) as total_revenue\n",
+        "FROM\n",
+        "  dbutils_catalog.silver_hospital.patients_clean"
+      ]
+    },
+    {
+      "name": "city_distribution",
+      "displayName": "City Distribution",
+      "queryLines": [
+        "SELECT\n",
+        "  city,\n",
+        "  patient_count\n",
+        "FROM\n",
+        "  dbutils_catalog.gold_hospital.city_patient_distribution\n",
+        "ORDER BY\n",
+        "  patient_count DESC"
+      ]
+    },
+    {
+      "name": "disease_analysis",
+      "displayName": "Disease Analysis",
+      "queryLines": [
+        "SELECT\n",
+        "  disease,\n",
+        "  patient_count\n",
+        "FROM\n",
+        "  dbutils_catalog.gold_hospital.disease_analysis\n",
+        "ORDER BY\n",
+        "  patient_count DESC"
+      ]
+    },
+    {
+      "name": "top_disease",
+      "displayName": "Top Disease",
+      "queryLines": [
+        "SELECT\n",
+        "  disease,\n",
+        "  patient_count\n",
+        "FROM\n",
+        "  dbutils_catalog.gold_hospital.disease_analysis\n",
+        "ORDER BY\n",
+        "  patient_count DESC\n",
+        "LIMIT 1"
+      ]
+    },
+    {
+      "name": "monthly_admissions",
+      "displayName": "Monthly Admissions",
+      "queryLines": [
+        "SELECT\n",
+        "  MONTH(admission_date) as admission_month,\n",
+        "  COUNT(*) as patient_count\n",
+        "FROM\n",
+        "  dbutils_catalog.silver_hospital.patients_clean\n",
+        "GROUP BY\n",
+        "  MONTH(admission_date)\n",
+        "ORDER BY\n",
+        "  admission_month"
+      ]
+    },
+    {
+      "name": "city_bill_analysis",
+      "displayName": "City Bill Analysis",
+      "queryLines": [
+        "SELECT\n",
+        "  city,\n",
+        "  average_bill\n",
+        "FROM\n",
+        "  dbutils_catalog.gold_hospital.city_bill_analysis\n",
+        "ORDER BY\n",
+        "  average_bill DESC"
+      ]
+    },
+    {
+      "name": "gender_distribution",
+      "displayName": "Gender Distribution",
+      "queryLines": [
+        "SELECT\n",
+        "  gender,\n",
+        "  total_patients\n",
+        "FROM\n",
+        "  dbutils_catalog.gold_hospital.patient_demographics"
+      ]
+    },
+    {
+      "name": "hospital_performance",
+      "displayName": "Hospital Performance",
+      "queryLines": [
+        "SELECT\n",
+        "  hospital_name,\n",
+        "  patient_count,\n",
+        "  avg_bill\n",
+        "FROM\n",
+        "  dbutils_catalog.gold_hospital.hospital_analysis\n",
+        "ORDER BY\n",
+        "  patient_count DESC"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "5907123f",
+      "displayName": "Page 1",
+      "layout": [
+        {
+          "widget": {
+            "name": "total_patients_kpi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "sum(total_patients)",
+                      "expression": "SUM(`total_patients`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Total Patients",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_patients)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "average_age_kpi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "avg(average_age)",
+                      "expression": "AVG(`average_age`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Average Age",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(average_age)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "type": "exact",
+                      "places": 1
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 2,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "total_revenue_kpi",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "kpi_metrics",
+                  "fields": [
+                    {
+                      "name": "sum(total_revenue)",
+                      "expression": "SUM(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Total Revenue",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "sum(total_revenue)",
+                  "format": {
+                    "type": "number-currency",
+                    "abbreviation": "compact",
+                    "currencyCode": "USD"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 2,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "city_patient_count",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "city_distribution",
+                  "fields": [
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    },
+                    {
+                      "name": "sum(patient_count)",
+                      "expression": "SUM(`patient_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "City Wise Patient Count",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(patient_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "disease_analysis",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "disease_analysis",
+                  "fields": [
+                    {
+                      "name": "sum(patient_count)",
+                      "expression": "SUM(`patient_count`)"
+                    },
+                    {
+                      "name": "disease",
+                      "expression": "`disease`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Disease Analysis",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(patient_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "disease",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 5,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "gender_distribution",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "gender_distribution",
+                  "fields": [
+                    {
+                      "name": "sum(total_patients)",
+                      "expression": "SUM(`total_patients`)"
+                    },
+                    {
+                      "name": "gender",
+                      "expression": "`gender`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Gender Distribution",
+                "showTitle": true
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(total_patients)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "gender",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 11,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "payment_distribution",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "payment_distribution",
+                  "fields": [
+                    {
+                      "name": "sum(total_transactions)",
+                      "expression": "SUM(`total_transactions`)"
+                    },
+                    {
+                      "name": "payment_method",
+                      "expression": "`payment_method`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Payment Distribution",
+                "showTitle": true
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(total_transactions)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "payment_method",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 11,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "top_disease",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "top_disease",
+                  "fields": [
+                    {
+                      "name": "disease",
+                      "expression": "`disease`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "title": "Top Disease",
+                "showTitle": true
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "disease"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 11,
+            "width": 4,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "age_group_analysis",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "age_group_analysis",
+                  "fields": [
+                    {
+                      "name": "gender",
+                      "expression": "`gender`"
+                    },
+                    {
+                      "name": "age_group",
+                      "expression": "`age_group`"
+                    },
+                    {
+                      "name": "sum(patient_count)",
+                      "expression": "SUM(`patient_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Age Group Analysis",
+                "showTitle": true
+              },
+              "mark": {
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "age_group",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(patient_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "gender",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 17,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "hospital_performance",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "hospital_performance",
+                  "fields": [
+                    {
+                      "name": "hospital_name",
+                      "expression": "`hospital_name`"
+                    },
+                    {
+                      "name": "sum(patient_count)",
+                      "expression": "SUM(`patient_count`)"
+                    },
+                    {
+                      "name": "avg(avg_bill)",
+                      "expression": "AVG(`avg_bill`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Hospital Performance",
+                "showTitle": true
+              },
+              "mark": {
+                "layout": "group"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "hospital_name",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fields": [
+                    {
+                      "fieldName": "sum(patient_count)"
+                    },
+                    {
+                      "fieldName": "avg(avg_bill)"
+                    }
+                  ],
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 23,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "city_bill_analysis",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "city_bill_analysis",
+                  "fields": [
+                    {
+                      "name": "avg(average_bill)",
+                      "expression": "AVG(`average_bill`)"
+                    },
+                    {
+                      "name": "city",
+                      "expression": "`city`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Average Bill by City",
+                "showTitle": true
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "avg(average_bill)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "city",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 29,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "monthly_admissions",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "monthly_admissions",
+                  "fields": [
+                    {
+                      "name": "admission_month",
+                      "expression": "`admission_month`"
+                    },
+                    {
+                      "name": "sum(patient_count)",
+                      "expression": "SUM(`patient_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "title": "Monthly Admissions Trend",
+                "showTitle": true
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "admission_month",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(patient_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 29,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dashboard_header",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# 🏥 Hospital Management Analytics Dashboard\n",
+                "\n",
+                "### Comprehensive Healthcare Insights & Performance Metrics"
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "canvasBackgroundColor": {
+        "light": "#EEF2FF",
+        "dark": "#1A202C"
+      },
+      "widgetBackgroundColor": {
+        "light": "#FFFFFF",
+        "dark": "#2D3748"
+      },
+      "widgetBorderColor": {
+        "light": "#C7D2FE",
+        "dark": "#4C51BF"
+      },
+      "fontColor": {
+        "light": "#1F2937",
+        "dark": "#F9FAFB"
+      },
+      "selectionColor": {
+        "light": "#6366F1",
+        "dark": "#818CF8"
+      },
+      "visualizationColors": [
+        "#6366F1",
+        "#10B981",
+        "#F59E0B",
+        "#EF4444",
+        "#8B5CF6",
+        "#06B6D4",
+        "#EC4899",
+        "#14B8A6",
+        "#F97316",
+        "#A855F7",
+        "#22D3EE",
+        "#FB923C"
+      ],
+      "widgetHeaderAlignment": "LEFT",
+      "fontFamily": "Poppins",
+      "widgetPadding": 20,
+      "widgetMargin": 12,
+      "widgetCornerRadius": 16,
+      "widgetShadow": 40,
+      "fontSettings": {
+        "base": {
+          "fontFamily": "Poppins",
+          "fontColor": {
+            "light": "#1F2937",
+            "dark": "#E5E7EB"
+          },
+          "fontSize": 13,
+          "fontWeight": 400
+        },
+        "widgetTitle": {
+          "fontFamily": "Poppins",
+          "fontColor": {
+            "light": "#111827",
+            "dark": "#F9FAFB"
+          },
+          "fontSize": 17,
+          "fontWeight": 700
+        },
+        "fieldTitle": {
+          "fontFamily": "Poppins",
+          "textCase": "TEXT_CASE_UPPERCASE",
+          "fontColor": {
+            "light": "#6366F1",
+            "dark": "#A5B4FC"
+          },
+          "fontSize": 11,
+          "fontWeight": 600
+        },
+        "fieldValue": {
+          "fontFamily": "Poppins",
+          "fontColor": {
+            "light": "#1F2937",
+            "dark": "#F3F4F6"
+          },
+          "fontSize": 15,
+          "fontWeight": 600
+        }
+      },
+      "gridLineColor": {
+        "light": "#E0E7FF",
+        "dark": "#4C51BF"
+      },
+      "axisLineColor": {
+        "light": "#C7D2FE",
+        "dark": "#5B21B6"
+      }
+    },
+    "applyModeEnabled": false
+  }
+}
