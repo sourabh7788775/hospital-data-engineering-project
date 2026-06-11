@@ -1,9 +1,4 @@
 # Databricks notebook source
-# MAGIC %md
-# MAGIC #**Hospital** **Management**
-
-# COMMAND ----------
-
 # DBTITLE 1,Bronze Layer - Raw Data Ingestion
 # MAGIC %md
 # MAGIC # Bronze Layer - Raw Data Ingestion
